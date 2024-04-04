@@ -4,6 +4,7 @@ const express = require("express");
 const server = express();
 const morgan = require("morgan");
 const productRouter = require("./routes/product");
+const userRouter = require("./routes/user");
 //body Parse
 const bodyParser = require("body-parser");
 server.use(bodyParser.urlencoded({ extended: true }));
@@ -12,5 +13,6 @@ server.use(express.json());
 server.use(morgan("default"));
 server.use(express.static("public"));
 server.use("/products", productRouter.route);
+server.use("/users", userRouter.route);
 
 server.listen(3900, () => console.log("server run"));
