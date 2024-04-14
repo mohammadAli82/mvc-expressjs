@@ -1,7 +1,6 @@
-const fs=require('fs')
+const fs = require("fs");
 const data = JSON.parse(fs.readFileSync("db.json", "UTF-8"));
 const products = data.products;
-
 
 module.exports.createProduct = (req, res) => {
   console.log(req.body);
