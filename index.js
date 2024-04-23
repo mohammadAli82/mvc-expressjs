@@ -1,3 +1,4 @@
+require('dotenv').config()
 const fs = require("fs");
 // const index = fs.readFileSync("index.html", "UTF-8");
 const express = require("express");
@@ -15,4 +16,4 @@ server.use(express.static("public"));
 server.use("/products", productRouter.route);
 server.use("/users", userRouter.route);
 
-server.listen(3900, () => console.log("server run"));
+server.listen(process.env.PORT, () => console.log("server run"));
