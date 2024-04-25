@@ -1,29 +1,45 @@
 require("dotenv").config();
 const fs = require("fs");
 const mongoose = require("mongoose");
-// const index = fs.readFileSync("index.html", "UTF-8");
 const express = require("express");
 const server = express();
+const cors = require('cors');
 const morgan = require("morgan");
 const productRouter = require("./routes/product");
 const userRouter = require("./routes/user");
+const path = require('path');
 
-//mongoose connection
+// Mongoose connection
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/ecommerce"); // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-  console.log("database connected");
+  await mongoose.connect("mongodb://127.0.0.1:27017/ecommerce");
+  console.log("Database connected");
 }
 
-//body Parse
+// Body Parse
 const bodyParser = require("body-parser");
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
-server.use(express.json());
+
+// CORS
+server.use(cors());
+
+// Logging
 server.use(morgan("default"));
-server.use(express.static("public"));
+
+// Serve static files (React build)
+server.use(express.static(path.resolve(__dirname, 'build')));
+
+// Routes
 server.use("/products", productRouter.route);
 server.use("/users", userRouter.route);
 
-server.listen(process.env.PORT, () => console.log("server run"));
+// Handle other routes by serving index.html
+server.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
+
+// Start server agr env file se prt nhi ara hai to 8080 pr chalana
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
